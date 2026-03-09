@@ -20,7 +20,7 @@ L'écosystème est composé de 5 conteneurs applicatifs et 3 conteneurs d'infras
 - **Docker** et **Docker Compose** doivent être installés et fonctionnels sur votre machine.
 - *Note : Grâce aux builds multi-étapes (multi-stage builds) dans les Dockerfiles, **Java et Maven ne sont même pas requis** sur la machine hôte. Docker se charge de télécharger Maven, compiler le code source, et lancer les applications.*
 
-## 🛠️ Lancer le projet
+## Lancer le projet
 
 Une seule commande est nécessaire pour compiler l'intégralité du code source Java et monter toute l'infrastructure (Base de données, Message Broker, SMTP, NGINX et les 4 microservices Spring Boot) :
 
