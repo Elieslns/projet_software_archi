@@ -19,6 +19,9 @@ public class User {
     @Column(nullable = false)
     private boolean isVerified = false;
 
+    @Column(name = "verification_token")
+    private String verificationToken;
+
     // Constructors
     public User() {}
 
@@ -59,5 +62,13 @@ public class User {
 
     public void setVerified(boolean verified) {
         isVerified = verified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
