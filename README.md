@@ -1,8 +1,10 @@
 # Projet Architecture Logicielle - Microservices Auth & API Gateway
 
+**Auteurs :** Elies LOUNIS, Adel EL MOUSSAOUI, Amir BENYAHIA et Sofiane KHOURTA
+
 Ce projet implémente une architecture orientée microservices sécurisée par une API Gateway NGINX. Il répond aux exigences du projet d'introduction à l'architecture logicielle : authentification décentralisée, proxy inverse, et communication asynchrone type événementielle.
 
-## 🏗️ Architecture du Projet
+## Architecture du Projet
 
 L'écosystème est composé de 5 conteneurs applicatifs et 3 conteneurs d'infrastructure :
 
@@ -13,7 +15,7 @@ L'écosystème est composé de 5 conteneurs applicatifs et 3 conteneurs d'infras
 5. **Service B** : Un pseudo-service protégé qui renvoie `hello B` sur `/hello`.
 6. **Infrastructure** : MySQL 8.0 (Base de données), RabbitMQ (Message Broker) et MailHog (Serveur SMTP local).
 
-## 🚀 Prérequis
+## Prérequis
 
 - **Docker** et **Docker Compose** doivent être installés et fonctionnels sur votre machine.
 - *Note : Grâce aux builds multi-étapes (multi-stage builds) dans les Dockerfiles, **Java et Maven ne sont même pas requis** sur la machine hôte. Docker se charge de télécharger Maven, compiler le code source, et lancer les applications.*
@@ -33,7 +35,7 @@ Pour arrêter les conteneurs :
 docker compose down
 ```
 
-## 🧪 Scénario de Test (Manuel)
+## Scénario de Test (Manuel)
 
 Voici les commandes `curl` pour tester de A à Z la robustesse de l'API Gateway et des services.
 
@@ -83,7 +85,7 @@ curl -i -H "Authorization: Bearer <VOTRE_JWT>" http://localhost/b/hello
 ```
 *Succès ! Vous devriez voir s'afficher `hello A` et `hello B`.*
 
-## 🛑 Accès aux interfaces d'administration locales
+## Accès aux interfaces d'administration locales
 - **MailHog UI** : [http://localhost:8025](http://localhost:8025)
 - **RabbitMQ UI** : [http://localhost:15672](http://localhost:15672) (Identifiants : `guest` / `guest`)
 - **API Gateway (NGINX)** : [http://localhost:80](http://localhost:80)
