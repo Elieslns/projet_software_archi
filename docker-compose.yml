@@ -38,8 +38,6 @@ services:
       - "8025:8025" # Web UI
     networks:
       - microservices_net
-    networks:
-      - microservices_net
     restart: unless-stopped
 
   auth-service:
