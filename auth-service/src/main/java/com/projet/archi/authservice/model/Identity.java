@@ -1,10 +1,12 @@
 package com.projet.archi.authservice.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "identities")
+public class Identity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,24 +16,28 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private boolean isVerified = false;
 
     @Column(name = "verification_token")
     private String verificationToken;
 
-    // Constructors
-    public User() {}
+    @OneToOne(mappedBy = "identity", cascade = CascadeType.ALL)
+    private Credential credential;
 
-    public User(String email, String password) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "identity_authorities",
+        joinColumns = @JoinColumn(name = "identity_id"),
+        inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    private Set<Authority> authorities = new HashSet<>();
+
+    public Identity() {}
+
+    public Identity(String email) {
         this.email = email;
-        this.password = password;
-        this.isVerified = false;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -48,14 +54,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isVerified() {
         return isVerified;
     }
@@ -70,5 +68,21 @@ public class User {
 
     public void setVerificationToken(String verificationToken) {
         this.verificationToken = verificationToken;
+    }
+
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

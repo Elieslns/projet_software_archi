@@ -1,15 +1,16 @@
 package com.projet.archi.authservice.controller;
 
 import com.projet.archi.authservice.dto.RegisterRequest;
-import com.projet.archi.authservice.model.User;
+import com.projet.archi.authservice.dto.LoginRequest;
+import com.projet.archi.authservice.model.Identity;
+import com.projet.archi.authservice.model.Token;
 import com.projet.archi.authservice.service.AuthService;
+import com.projet.archi.authservice.security.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.projet.archi.authservice.dto.LoginRequest;
-import com.projet.archi.authservice.security.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +28,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            User registeredUser = authService.registerUser(request);
+            Identity registeredIdentity = authService.registerUser(request);
             
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Utilisateur créé avec succès. Un e-mail de vérification a été envoyé.");
-            response.put("userId", registeredUser.getId());
+            response.put("identityId", registeredIdentity.getId());
             
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
@@ -59,10 +60,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
-            String token = authService.login(request);
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+            Token token = authService.login(request);
+            return ResponseEntity.ok(token);
         } catch (RuntimeException e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());

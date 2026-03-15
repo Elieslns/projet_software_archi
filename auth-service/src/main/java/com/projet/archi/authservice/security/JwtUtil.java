@@ -1,5 +1,8 @@
 package com.projet.archi.authservice.security;
 
+import com.projet.archi.authservice.model.Authority;
+import com.projet.archi.authservice.model.Identity;
+import com.projet.archi.authservice.model.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -10,24 +13,34 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
 
-    // Should be injected from properties in a real application
     @Value("${jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private String secret;
 
-    @Value("${jwt.expiration:86400000}") // 1 day in milliseconds
+    @Value("${jwt.expiration:86400000}")
     private long jwtExpiration;
 
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+    public Token generateToken(Identity identity) {
+        Date issuedAt = new Date(System.currentTimeMillis());
+        Date expiresAt = new Date(System.currentTimeMillis() + jwtExpiration);
+        
+        String authorities = identity.getAuthorities().stream()
+                .map(Authority::getName)
+                .collect(Collectors.joining(","));
+
+        String jwtValue = Jwts.builder()
+                .subject(identity.getEmail())
+                .claim("authorities", authorities)
+                .issuedAt(issuedAt)
+                .expiration(expiresAt)
                 .signWith(getSignInKey())
                 .compact();
+        
+        return new Token(jwtValue, issuedAt, expiresAt);
     }
 
     public boolean isTokenValid(String token) {
