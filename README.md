@@ -15,6 +15,30 @@ L'écosystème est composé de 5 conteneurs applicatifs et 3 conteneurs d'infras
 5. **Service B** : Un pseudo-service protégé qui renvoie `hello B` sur `/hello`.
 6. **Infrastructure** : MySQL 8.0 (Base de données), RabbitMQ (Message Broker) et MailHog (Serveur SMTP local).
 
+## Points d'entrée API (Endpoints)
+
+L'API Gateway (NGINX) centralise tous les accès sur le port `80`.
+
+### Auth Service (Public)
+| Méthode | Path | Description |
+| :--- | :--- | :--- |
+| `POST` | `/register` | Inscription d'un nouvel utilisateur. |
+| `GET` | `/verify` | Validation du compte via le jeton reçu par email. |
+| `POST` | `/login` | Authentification et génération du token JWT. |
+
+### Services Protégés (Nécessitent JWT)
+*Note : Ces routes nécessitent le header `Authorization: Bearer <JWT>`.*
+
+| Méthode | Path | Service Cible | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/a/hello` | Service A | Renvoie "hello A". |
+| `GET` | `/b/hello` | Service B | Renvoie "hello B". |
+
+### Validation Interne (Privé)
+| Méthode | Path | Description |
+| :--- | :--- | :--- |
+| `GET` | `/validate` | Utilisé par NGINX pour valider le JWT avant routage. |
+
 ## Prérequis
 
 - **Docker** et **Docker Compose** doivent être installés et fonctionnels sur votre machine.
